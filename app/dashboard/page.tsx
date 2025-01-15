@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma';
 import { Button } from '@/components/ui/button';
 import CreateTransactionDialog from './_components/CreateTransactionDialog';
 import Overview from './_components/Overview';
+import IncomeExpenseChart from './_components/IncomeExpenseChart';
+
 
 async function page() {
     const user = await currentUser()
@@ -15,9 +17,14 @@ async function page() {
     const userSettings = await prisma.userSettings.findUnique({
         where:{
             userId: user.id,
-            currency: 'USD',
+            currency: 'INR',
         },
     });
+
+    const data = [
+        { month: "Jan 1-7", income: 1200, expense: 800, balance: 400 },
+        { month: "Jan 8-14", income: 1400, expense: 600, balance: 800},
+      ];
 
     return <div className='h-full bg-background'>
         <div className="border-b bg-card">
@@ -30,6 +37,7 @@ async function page() {
             </div>
         </div>
         <Overview userSettings={userSettings} />
+       <IncomeExpenseChart data={data} />
     </div>
 }
 

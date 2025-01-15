@@ -6,6 +6,7 @@ import SkeletonWrapper from "@/components/ui/SkeletonWrapper";
 import StatCard from "@/components/ui/StatCard";
 import { TrendingDown, TrendingUp, Wallet } from "lucide-react";
 
+
 interface Props {
   from: Date;
   to: Date;
