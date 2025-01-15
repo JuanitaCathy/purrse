@@ -21,10 +21,10 @@ function Navbar(){
 
 const items = [
     {label: "Dashboard", link: "/dashboard"},
-    {label: "Learn", link: "/learn"},
     {label: "Student Essentials", link: "/organizers"},
     {label: "Receipts Hub", link: "/receipts"},
-    {label: "Managers", link: "/managers"}
+    {label: "Managers", link: "/managers"},
+    {label: "Learn", link: "/learn"}
 ]
 
 function MobileNavbar() {
