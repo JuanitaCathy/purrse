@@ -56,7 +56,7 @@ function Logo() {
   return (
     <>
       <div onClick={handleLogoClick} className="cursor-pointer">
-        <Cat className="w-11 h-11 mt-5 text-purple-200" />
+        <Cat className="w-16 h-16 mt-5 text-purple-100" />
       </div>
 
       {isModalOpen && (

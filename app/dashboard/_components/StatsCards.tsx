@@ -43,30 +43,32 @@ const StatsCards: React.FC<Props> = ({ from, to }) => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-4 md:flex-nowrap">
-      <SkeletonWrapper isLoading={isLoading}> 
+    <div className="container mx-auto px-8">
+      <div className="flex flex-wrap justify-center gap-4 md:flex-nowrap">
+        <SkeletonWrapper isLoading={isLoading}> 
         <StatCard
           label="Income"
           value={increasedIncome} // Use the calculated value after the increase
           icon={
-            <TrendingUp className="h-12 w-12 items-center rounded-lg p-2 text-emerald-500 bg-emerald-400/10 dark:text-emerald-300 dark:bg-emerald-500/20" />
+            <TrendingUp className="h-12 w-12 items-center rounded-lg p-2 text-emerald-400 bg-emerald-400/10 dark:text-emerald-300 dark:bg-emerald-500/20 animate-pulse" />
           }
         />
         <StatCard
           label="Expense"
           value={increasedExpense} // Use the calculated value after the increase
           icon={
-            <TrendingDown className="h-12 w-12 items-center rounded-lg p-2 text-red-500 bg-red-400/10 dark:text-red-300 dark:bg-red-500/20" />
+            <TrendingDown className="h-12 w-12 items-center rounded-lg p-2 text-rose-400 bg-rose-400/10 dark:text-rose-300 dark:bg-rose-500/20 animate-pulse" />
           }
         />
         <StatCard
           label="Balance"
           value={increasedBalance} // Use the calculated value after the increase
           icon={
-            <Wallet className="h-12 w-12 items-center rounded-lg p-2 text-blue-500 bg-blue-400/10 dark:text-blue-300 dark:bg-blue-500/20" />
+            <Wallet className="h-12 w-12 items-center rounded-lg p-2 text-purple-400 bg-purple-400/10 dark:text-purple-300 dark:bg-purple-500/20 animate-pulse" />
           }
         />
-      </SkeletonWrapper>
+        </SkeletonWrapper>
+      </div>
     </div>
   );
 };

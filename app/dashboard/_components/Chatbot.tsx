@@ -51,7 +51,7 @@ const Chatbot = () => {
           alt="Orange"
           className="w-10 h-10 rounded-full object-cover"
         />
-        <span className="text-white font-bold">Chat with Orange!</span>
+        <span className="text-transparent bg-gradient-to-r from-rose-400 to-purple-300 bg-clip-text font-bold">Chat with Orange! 😺</span>
       </div>
 
       {/* Chatbot Messages */}
@@ -92,7 +92,7 @@ const Chatbot = () => {
         <input
           type="text"
           placeholder="Ask Orange about finance..."
-          className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-white bg-gray-800"
+          className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-white bg-gray-800/50 backdrop-blur-sm"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
@@ -100,7 +100,7 @@ const Chatbot = () => {
         />
         <button
           onClick={sendMessage}
-          className="px-4 py-2 text-white bg-purple-500 rounded-md hover:bg-purple-600 disabled:bg-gray-600"
+          className="px-4 py-2 text-white bg-gradient-to-r from-rose-500 to-purple-500 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           disabled={isLoading}
         >
           {isLoading ? "..." : "Send"}

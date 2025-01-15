@@ -30,8 +30,10 @@ function Overview({ userSettings }: { userSettings: UserSettings }) {
   return (
     <div>
       <div className="container flex flex-wrap items-end justify-between gap-2 py-6">
-        <h2 className="text-3xl font-bold">Overview</h2>
-        <div className="flex items-center gap-3">
+        <h2 className="text-3xl ml-6 font-bold">
+          Purr-fect Overview 
+        </h2>
+        <div className="flex items-center mr-6 gap-3">
           <DateRangePicker
             initialDateFrom={dateRange.from}
             initialDateTo={dateRange.to}

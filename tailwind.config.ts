@@ -9,6 +9,7 @@ export default {
   ],
   theme: {
   	extend: {
+		
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -82,11 +83,21 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+			  shimmer: {
+				from: {
+				  backgroundPosition: "0 0",
+				},
+				to: {
+				  backgroundPosition: "-200% 0",
+				},
+			  },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
+			'shimmer': 'shimmer 2s linear infinite',
   			'accordion-up': 'accordion-up 0.2s ease-out'
+
   		}
   	}
   },

@@ -83,7 +83,7 @@ const Fund: React.FC = () => {
 
   return (
     <div className="p-8 bg-gray-1200">
-      <h2 className="text-3xl font-bold text-white text-center mb-8">Cat-strophic Fund</h2>
+      <h2 className="text-3xl font-bold text-white text-center mb-8"><span className="text-transparent bg-gradient-to-r from-emerald-200 to-rose-400 bg-clip-text">Cat-strophic </span> Fund</h2>
       <Card className="p-6 bg-gray rounded-lg shadow-xl max-w-[1200px] mx-auto w-full grid grid-cols-2 gap-8 h-full">
 
         {/* Left section: Goal and Progress */}
