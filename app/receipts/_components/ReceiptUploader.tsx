@@ -1,77 +1,144 @@
-"use client";
-import React, { useState } from "react";
-import axios from "axios";
-import { PlusCircle } from "lucide-react";
+"use client"
+import React, { useState, ChangeEvent } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Upload } from "lucide-react";
 
-interface Receipt {
-  imageUrl: string;
-  extractedData: string;
+interface ReceiptData {
+  date: string;
+  store: string;
+  amount: string;
+  items?: string[];
 }
 
-const ReceiptUploader = () => {
-  const [receipts, setReceipts] = useState<Receipt[]>([]);
+const ReceiptUploader: React.FC = () => {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
+    if (!file) return;
 
-      try {
-        // Send the file to the API route for further processing
-        const response = await axios.post("/api/receiptUpload", formData);
+    setSelectedImage(file);
+    setImageUrl(URL.createObjectURL(file));
+    setError(null);
+    
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = (reader.result as string).split(',')[1];
+      await analyzeReceipt(base64Image);
+    };
+    reader.readAsDataURL(file);
+  };
 
-        const extractedData = response.data.extracted_data; // Adjust based on the actual response structure
-        const imageUrl = URL.createObjectURL(file);
+  const analyzeReceipt = async (base64Image: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/receiptUpload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64Image }),
+      });
 
-        setReceipts((prevReceipts) => [
-          ...prevReceipts,
-          { imageUrl, extractedData },
-        ]);
-      } catch (error) {
-        console.error("Error uploading receipt:", error);
-      } finally {
-        setIsLoading(false);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to analyze receipt');
       }
+
+      setReceiptData(data);
+    } catch (error) {
+      console.error('Error analyzing receipt:', error);
+      setError(error instanceof Error ? error.message : 'Failed to analyze receipt');
+      setReceiptData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="space-y-4">
-      {/* Plus Icon for Upload */}
-      <div className="flex justify-center">
-        <label htmlFor="file-upload" className="cursor-pointer text-purple-600">
-          <PlusCircle className="h-12 w-12" />
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          accept="image/*"
-          onChange={handleFileUpload}
-          className="hidden"
-        />
-      </div>
+    <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Receipt Analysis</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-      {/* Receipts Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {receipts.map((receipt, index) => (
-          <div key={index} className="card bg-white shadow-md rounded-lg p-4">
-            {/* Receipt Image */}
-            <img src={receipt.imageUrl} alt="Receipt" className="w-full h-auto rounded-lg" />
-
-            {/* Extracted Data */}
-            <div className="mt-4">
-              <h3 className="font-semibold text-lg">Extracted Data</h3>
-              <pre className="text-sm mt-2">{receipt.extractedData}</pre>
-            </div>
+          <div className="flex items-center justify-center w-full">
+            <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                <p className="mb-2 text-sm text-gray-500">
+                  <span className="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p className="text-xs text-gray-500">PNG, JPG or JPEG</p>
+              </div>
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+            </label>
           </div>
-        ))}
-      </div>
 
-      {/* Loading Indicator */}
-      {isLoading && <div className="text-center text-purple-600">Processing...</div>}
+          {imageUrl && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Uploaded Receipt</h3>
+              <div className="relative w-full h-64">
+                <img
+                  src={imageUrl}
+                  alt="Uploaded receipt"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+          )}
+
+          {isLoading && <p className="text-center">Analyzing receipt...</p>}
+
+          {receiptData && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Extracted Information</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="font-medium">Date:</p>
+                  <p>{receiptData.date}</p>
+                </div>
+                <div>
+                  <p className="font-medium">Store:</p>
+                  <p>{receiptData.store}</p>
+                </div>
+                <div>
+                  <p className="font-medium">Total Amount:</p>
+                  <p>{receiptData.amount}</p>
+                </div>
+                {receiptData.items && (
+                  <div>
+                    <p className="font-medium">Items:</p>
+                    <ul className="list-disc pl-4">
+                      {receiptData.items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

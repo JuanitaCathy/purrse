@@ -1,98 +1,120 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs';
-import { IncomingForm } from 'formidable';
-import axios from 'axios';
-import FormData from 'form-data'; // Use the form-data package
-import { Readable } from 'stream';
-import { IncomingMessage } from 'http';
+import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-// Disable Next.js default body parser
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js default body parser to handle multipart/form-data
-  },
-};
-
-// Helper function to convert ReadableStream to Node.js Readable stream
-function convertReadableStreamToNodeReadable(readableStream: ReadableStream<Uint8Array> | null): Readable | null {
-  if (!readableStream) {
-    return null;
-  }
-
-  const reader = readableStream.getReader();
-  const stream = new Readable({
-    read() {
-      reader.read().then(({ done, value }) => {
-        if (done) {
-          this.push(null);
-        } else {
-          this.push(Buffer.from(value));
-        }
-      });
-    },
-  });
-
-  return stream;
+interface ReceiptData {
+  date: string;
+  store: string;
+  amount: string;
+  items?: string[];
 }
 
-export async function POST(request: Request) {
+// Define Nebius AI specific types for better type safety
+interface NebiusAICompletion {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+}
+
+// Initialize the OpenAI client with Nebius AI configuration
+const client = new OpenAI({
+  baseURL: 'https://api.studio.nebius.ai/v1/',
+  apiKey: process.env.NEBIUS_API_KEY || '',
+});
+
+export async function POST(req: NextRequest) {
   try {
-    // Ensure the request body is a stream and not null
-    if (!request.body) {
-      return NextResponse.json({ error: 'Request body is empty' }, { status: 400 });
+    // Validate API key
+    if (!process.env.NEBIUS_API_KEY) {
+      console.error('NEBIUS_API_KEY is not set');
+      return NextResponse.json(
+        { message: 'API key configuration error' },
+        { status: 500 }
+      );
     }
 
-    // Convert ReadableStream to Node.js Readable stream
-    const nodeReadableStream = convertReadableStreamToNodeReadable(request.body);
+    // Parse request body
+    const { image } = await req.json();
 
-    // Ensure the converted stream is not null before passing to formidable
-    if (!nodeReadableStream) {
-      return NextResponse.json({ error: 'Failed to convert body to stream' }, { status: 500 });
+    // Validate image data
+    if (!image) {
+      return NextResponse.json(
+        { message: 'Image data is required' },
+        { status: 400 }
+      );
     }
 
-    // Use formidable to parse the multipart form data
-    const form = new IncomingForm();
-
-    // Parse the incoming request body
-    const formData: any = await new Promise((resolve, reject) => {
-      form.parse(nodeReadableStream as unknown as IncomingMessage, (err, fields, files) => {
-        if (err) {
-          // Enhanced error logging to capture the actual error
-          console.error('Error parsing form:', err);
-          return reject(NextResponse.json({ error: 'Failed to process the receipt' }, { status: 500 }));
-        }
-        
-        // Check if files exist
-        if (!files || !files.file) {
-          return reject(NextResponse.json({ error: 'No file uploaded' }, { status: 400 }));
-        }
-
-        // Successfully parsed form data
-        resolve({ fields, files });
+    try {
+      // Make API call to Nebius AI
+      const completion = await client.chat.completions.create({
+        model: "Qwen/Qwen2-VL-72B-Instruct",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "Extract the following information from this receipt: date, store name, total amount, and list of items if visible. Format the response as a JSON object with the following structure: {\"date\": \"YYYY-MM-DD\", \"store\": \"store name\", \"amount\": \"total amount\", \"items\": [\"item1\", \"item2\"]}"
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/jpeg;base64,${image}`
+                }
+              }
+            ]
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000,
+        response_format: { type: "json_object" }
       });
-    });
 
-    // Retrieve file data from the parsed formData
-    const file = formData.files.file[0]; // Get the uploaded file
-    const filePath = file.filepath; // Get the path of the file
-
-    // Create a new FormData object to send to Nebius API (use form-data package)
-    const nebApiFormData = new FormData();
-    nebApiFormData.append('file', fs.createReadStream(filePath), file.originalFilename || 'file');
-
-    // Send the file data to Nebius API using axios
-    const response = await axios.post(
-      'https://api.studio.nebius.ai/v1/models/Qwen/Qwen2-VL-7B-Instruct/inference',
-      nebApiFormData,
-      {
-        headers: nebApiFormData.getHeaders(), // This adds the correct headers for multipart/form-data
+      // Validate API response
+      const content = completion.choices[0]?.message?.content;
+      if (!content) {
+        console.error('Empty response from Nebius AI');
+        return NextResponse.json(
+          { message: 'Invalid API response' },
+          { status: 500 }
+        );
       }
-    );
 
-    // Return the response from Nebius API
-    return NextResponse.json(response.data);
-  } catch (error) {
-    console.error('Error uploading receipt:', error);
-    return NextResponse.json({ error: 'Failed to process the receipt' }, { status: 500 });
+      // Parse and validate the response data
+      try {
+        const receiptData: ReceiptData = JSON.parse(content);
+        
+        // Basic validation of required fields
+        if (!receiptData.date || !receiptData.store || !receiptData.amount) {
+          throw new Error('Missing required fields in API response');
+        }
+
+        return NextResponse.json(receiptData);
+      } catch (parseError) {
+        console.error('Error parsing API response:', parseError);
+        return NextResponse.json(
+          { message: 'Failed to parse receipt data' },
+          { status: 500 }
+        );
+      }
+    } catch (apiError: any) {
+      console.error('Nebius AI API Error:', {
+        status: apiError.status,
+        message: apiError.message,
+        details: apiError.response?.data || apiError.response || apiError
+      });
+      
+      return NextResponse.json(
+        { message: `API Error: ${apiError.message}` },
+        { status: apiError.status || 500 }
+      );
+    }
+  } catch (error: any) {
+    console.error('Request Error:', error);
+    return NextResponse.json(
+      { message: error.message || 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

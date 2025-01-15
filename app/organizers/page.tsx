@@ -167,7 +167,7 @@ const Fund: React.FC = () => {
               <div className="bg-gray-900 p-6 rounded-lg shadow-xl text-center">
                 <p className="text-2xl font-semibold text-emerald-500">Congrats! You reached your goal! 😺🎉</p>
                 <img
-                  src="/cat-happy.gif" // Replace with a cute cat gif
+                  src="/oiia-oiiaoiia.gif" // Replace with a cute cat gif
                   alt="Happy Cat"
                   className="mx-auto mt-4 w-32 h-32 rounded-full"
                 />
