@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import CreateTransactionDialog from './_components/CreateTransactionDialog';
 import Overview from './_components/Overview';
 import IncomeExpenseChart from './_components/IncomeExpenseChart';
+import Chatbot from './_components/Chatbot';
+import ChatbotWithToggle from './_components/ChatbotWithToggle'; 
 
 
 async function page() {
@@ -38,6 +40,8 @@ async function page() {
         </div>
         <Overview userSettings={userSettings} />
        <IncomeExpenseChart data={data} />
+       <ChatbotWithToggle />
+
     </div>
 }
 

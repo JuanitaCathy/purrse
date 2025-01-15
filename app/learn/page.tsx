@@ -16,50 +16,46 @@ const LearnPage = () => {
       description: "Managing money when every penny counts",
       icon: <Wallet className="w-6 h-6" />,
       content: (
-        <>
-          <h3 className="font-semibold text-lg">Why Budgeting Matters for Students</h3>
-          <p>
-            As a student, you might have limited income from part-time jobs, scholarships, or parental support. 
-            Budgeting helps you make the most of what you have and avoid running out of money before the end of the semester.
-          </p>
-          <h3 className="font-semibold text-lg mt-4">Student-Specific Budget Tips</h3>
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>Track Your Spending:</strong> Use apps or a notebook to monitor where your money goes.
-            </li>
-            <li>
-              <strong>Prioritize Essentials:</strong> Rent, tuition, and groceries come first.
-            </li>
-            <li>
-              <strong>Meal Prep:</strong> Cooking at home saves money compared to eating out.
-            </li>
-            <li>
-              <strong>Take Advantage of Discounts:</strong> Many places offer student discounts—don’t forget your ID!
-            </li>
-          </ul>
-          <h3 className="font-semibold text-lg mt-4">Budgeting Methods for Students</h3>
-          <ol className="list-decimal ml-6 space-y-2">
-            <li>
-              <strong>The Weekly Budget:</strong> Divide your monthly income by four and limit your weekly spending.
-            </li>
-            <li>
-              <strong>50/30/20 Rule:</strong> Allocate 50% to needs, 30% to wants, and 20% to savings or debt repayment.
-            </li>
-          </ol>
+        <div className="flex items-start gap-4">
+          <div>
+            <h3 className="font-semibold text-lg">Why Budgeting Matters for Students</h3>
+            <p>
+              As a student, you might have limited income from part-time jobs, scholarships, or parental support. 
+              Budgeting helps you make the most of what you have and avoid running out of money before the end of the semester.
+            </p>
+            <h3 className="font-semibold text-lg mt-4">Student-Specific Budget Tips</h3>
+            <ul className="list-disc ml-6 space-y-2">
+              <li>
+                <strong>Track Your Spending:</strong> Use apps or a notebook to monitor where your money goes.
+              </li>
+              <li>
+                <strong>Prioritize Essentials:</strong> Rent, tuition, and groceries come first.
+              </li>
+              <li>
+                <strong>Meal Prep:</strong> Cooking at home saves money compared to eating out.
+              </li>
+              <li>
+                <strong>Take Advantage of Discounts:</strong> Many places offer student discounts—don’t forget your ID!
+              </li>
+            </ul>
+            <h3 className="font-semibold text-lg mt-4">Budgeting Methods for Students</h3>
+            <ol className="list-decimal ml-6 space-y-2">
+              <li>
+                <strong>The Weekly Budget:</strong> Divide your monthly income by four and limit your weekly spending.
+              </li>
+              <li>
+                <strong>50/30/20 Rule:</strong> Allocate 50% to needs, 30% to wants, and 20% to savings or debt repayment.
+              </li>
+            </ol>
+          </div>
           <Image
-            src="/images/student-budgeting.gif"
+            src="/giphy.gif"
             alt="Budgeting GIF"
             width={400}
             height={250}
             className="rounded-md my-4"
           />
-          <h3 className="font-semibold text-lg">Common Budgeting Mistakes</h3>
-          <ul className="list-disc ml-6 space-y-2">
-            <li>Ignoring small expenses that add up over time (e.g., coffee runs).</li>
-            <li>Not setting aside money for emergencies.</li>
-            <li>Using credit cards for non-essential purchases.</li>
-          </ul>
-        </>
+        </div>
       ),
       tip: "Always track your expenses. Knowing where your money goes is the first step to taking control.",
       quiz: {
@@ -67,6 +63,7 @@ const LearnPage = () => {
         options: ["Entertainment", "Groceries", "Rent and Tuition"],
         answer: "Rent and Tuition",
       },
+      resources: "https://www.example.com/budgeting-resources",
     },
     {
       id: "saving",
@@ -74,47 +71,50 @@ const LearnPage = () => {
       description: "Building a safety net, one dollar at a time",
       icon: <PiggyBank className="w-6 h-6" />,
       content: (
-        <>
-          <h3 className="font-semibold text-lg">Why Save as a Student?</h3>
-          <p>
-            Saving early builds good financial habits and provides a safety net for unexpected expenses. 
-            Even small savings add up over time and can help with future goals like travel, tech gadgets, or emergencies.
-          </p>
-          <h3 className="font-semibold text-lg mt-4">How to Save on a Student Budget</h3>
-          <ul className="list-disc ml-6 space-y-2">
-            <li>
-              <strong>Set Small Goals:</strong> Save for short-term needs, like books or a new laptop.
-            </li>
-            <li>
-              <strong>Automate Savings:</strong> Set up auto-transfers to a savings account after every paycheck.
-            </li>
-            <li>
-              <strong>Find Free Alternatives:</strong> Look for free campus events, open-source software, and free textbooks online.
-            </li>
-            <li>
-              <strong>Use Spare Change Apps:</strong> Apps like Acorns round up your purchases and save the difference.
-            </li>
-          </ul>
+        <div className="flex items-start gap-4">
+          <div>
+            <h3 className="font-semibold text-lg">Why Save as a Student?</h3>
+            <p>
+              Saving early builds good financial habits and provides a safety net for unexpected expenses. 
+              Even small savings add up over time and can help with future goals like travel, tech gadgets, or emergencies.
+            </p>
+            <h3 className="font-semibold text-lg mt-4">How to Save on a Student Budget</h3>
+            <ul className="list-disc ml-6 space-y-2">
+              <li>
+                <strong>Set Small Goals:</strong> Save for short-term needs, like books or a new laptop.
+              </li>
+              <li>
+                <strong>Automate Savings:</strong> Set up auto-transfers to a savings account after every paycheck.
+              </li>
+              <li>
+                <strong>Find Free Alternatives:</strong> Look for free campus events, open-source software, and free textbooks online.
+              </li>
+              <li>
+                <strong>Use Spare Change Apps:</strong> Apps like Acorns round up your purchases and save the difference.
+              </li>
+            </ul>
+            <h3 className="font-semibold text-lg">The Power of Compound Interest</h3>
+            <p>
+              If you save $50 a month at an average annual return of 7%, you could have over $24,000 in 20 years. 
+              Start small and think long-term!
+            </p>
+          </div>
           <Image
-            src="/images/student-saving.gif"
+            src="/giphy.webp"
             alt="Saving GIF"
             width={400}
             height={250}
             className="rounded-md my-4"
           />
-          <h3 className="font-semibold text-lg">The Power of Compound Interest</h3>
-          <p>
-            If you save $50 a month at an average annual return of 7%, you could have over $24,000 in 20 years. 
-            Start small and think long-term!
-          </p>
-        </>
+        </div>
       ),
-      tip: "Save first, spend later. Treat savings like a fixed expense.",
+      tip: "Start saving early to take advantage of compound interest and build a financial safety net.",
       quiz: {
-        question: "Which is a good habit to save as a student?",
-        options: ["Automate savings", "Spend first, save what's left", "Avoid saving altogether"],
-        answer: "Automate savings",
+        question: "What’s a good habit to start saving as a student?",
+        options: ["Set small goals", "Ignore savings", "Spend it all"],
+        answer: "Set small goals",
       },
+      resources: "https://www.example.com/saving-resources",
     },
     {
       id: "debt",
@@ -122,7 +122,7 @@ const LearnPage = () => {
       description: "Tackling loans without stress",
       icon: <CreditCard className="w-6 h-6" />,
       content: (
-        <>
+        <div className="text-center">
           <h3 className="font-semibold text-lg">Understanding Student Loans</h3>
           <p>
             Student loans can be an investment in your future, but they need to be managed wisely. 
@@ -144,18 +144,18 @@ const LearnPage = () => {
             </li>
           </ul>
           <Image
-            src="/images/student-debt.gif"
+            src="/giphy (1).webp"
             alt="Debt Management GIF"
             width={400}
             height={250}
-            className="rounded-md my-4"
+            className="rounded-md my-4 mx-auto"
           />
           <h3 className="font-semibold text-lg">Avoiding the Debt Trap</h3>
           <p>
             Don’t use student loans for unnecessary expenses like vacations or luxury items. 
             Always understand the impact of interest rates and repayment terms.
           </p>
-        </>
+        </div>
       ),
       tip: "Make payments on interest while still in school to reduce your overall loan balance.",
       quiz: {
@@ -167,6 +167,7 @@ const LearnPage = () => {
         ],
         answer: "Start paying interest while in school",
       },
+      resources: "https://www.example.com/debt-management-resources",
     },
   ];
 
@@ -231,14 +232,12 @@ const LearnPage = () => {
                     <p className="font-semibold text-purple-700">{module.tip}</p>
                   </div>
                   <div className="mt-4">
-                    <p className="font-bold">Quiz Time!</p>
                     <p>{module.quiz.question}</p>
                     <div className="mt-2 flex flex-col gap-2">
                       {module.quiz.options.map((option) => (
                         <button
                           key={option}
-                          className="p-2 border rounded-lg hover:bg
--purple-100"
+                          className="p-2 border rounded-lg hover:bg-purple-100"
                           onClick={() =>
                             alert(
                               option === module.quiz.answer
@@ -252,6 +251,14 @@ const LearnPage = () => {
                       ))}
                     </div>
                   </div>
+                  <a
+                    href={module.resources}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 block text-blue-600 underline"
+                  >
+                    Explore Resources
+                  </a>
                   <button
                     onClick={() => handleCompleteModule(module.id)}
                     className={`mt-4 px-4 py-2 rounded-lg text-white ${
